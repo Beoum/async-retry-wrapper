@@ -1,0 +1,25 @@
+{
+  "name": "async-retry-wrapper",
+  "version": "1.0.0",
+  "description": "Wrap the async function",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Beoum/async-retry-wrapper.git"
+  },
+  "keywords": [
+    "async",
+    "retry",
+    "wrap",
+    "wrapper"
+  ],
+  "author": "Beoum",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/Beoum/async-retry-wrapper/issues"
+  },
+  "homepage": "https://github.com/Beoum/async-retry-wrapper#readme"
+}
