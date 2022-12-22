@@ -1,5 +1,13 @@
+type AsyncFunction = Function;
+
 interface Functions {
-    [name: string]: Function;
+    [name: string]: AsyncFunction;
 }
 
-export default function retryWrapper(functions: Functions): Functions;
+interface Options {
+    count?: number;
+    interval?: number;
+    rule?: Function;
+}
+
+export default function retryWrapper(functions: Functions, options?: Options): Functions;
