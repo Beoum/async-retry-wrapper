@@ -46,7 +46,7 @@ There are a total of three options.
   * rule: When are you gonna stop trying again?, Only one parameter is error.
     * default: Retry if an error occurs
 
-The example is an option to retry twice more at 100 ms intervals when the response status is 500.
+The example is an option to retry twice more at 100 ms intervals when the response status is not 500.
 ```javascript
 const retryWrapper = require('async-retry-wrapper');
 
