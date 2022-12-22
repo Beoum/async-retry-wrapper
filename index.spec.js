@@ -11,7 +11,7 @@ Object.freeze(DEFAULT_FUNCTIONS);
 
 const DEFAULT_FUNCTIONS_KEYS = Object.keys(DEFAULT_FUNCTIONS);
 
-describe('Parameter:', () => {
+describe('Parameter', () => {
     describe('functions', () => {
         it('If it is not an object, it will fail', () => {
             const functions = [];
