@@ -102,7 +102,7 @@ const _makeDefaultOptions = (options, name) => {
         rule: options?.rule ?? _makeDefaultRetrySkipRule,
         errorLogger: _makeRetryLogger(name, count),
     };
-}
+};
 
 /**
  * @private functions validator
@@ -121,7 +121,7 @@ const _validFunctions = (functions) => {
     if (targetFunctions.length === 0) {
         throw new Error('functions is not must be empty');
     }
-}
+};
 
 /**
  * @private functions validator
@@ -132,7 +132,7 @@ const _validOptions = (options) => {
     if (options && _isNotObject(options)) {
         throw new Error('options is must be object');
     }
-}
+};
 
 /**
  * @private function wrapping
