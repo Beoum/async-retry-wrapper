@@ -36,7 +36,8 @@ const wrappedFunctions = retryWrapper(someFunObject);
 
 ### option
 You can also change the retry settings if you want.
-There are a total of three options, and below is an example that includes the default option.
+
+There are a total of three options.
 * options
   * count : How many times are you going to try again?
     * default: 1
@@ -44,12 +45,14 @@ There are a total of three options, and below is an example that includes the de
     * default: 0 (milliseconds)
   * rule: When are you gonna stop trying again?, Only one parameter is error.
     * default: Retry if an error occurs
+
+The example is an option to retry twice more at 100 ms intervals when the response status is 500.
 ```javascript
 const retryWrapper = require('async-retry-wrapper');
 
 const options = {
-    count: 1,
-    interval: 0, 
+    count: 2,
+    interval: 100, 
     // If the response status code is not 500, the retry will be stopped
     rule: err => err.status !== 500,
 };
