@@ -51,7 +51,7 @@ const options = {
     count: 1,
     interval: 0, 
     // If the response status code is not 500, the retry will be stopped
-    rule: err => err.status !== 500;
+    rule: err => err.status !== 500,
 };
 
 const wrappedFunctions = retryWrapper(someFunObject, options);
