@@ -6,14 +6,13 @@
  * @param {Function} func function
  */
 const _isAsyncFunction = func => func.constructor.name === 'AsyncFunction';
-const _isNotAsyncFunction = func => !_isAsyncFunction(func);
 
 /**
  * @private check object type
  *
  * @param {Object} obj object
  */
-const _isObject = obj => typeof obj === 'object';
+const _isObject = obj => typeof obj === 'object' && !Array.isArray(obj);
 const _isNotObject = obj => !_isObject(obj);
 
 /**
@@ -63,6 +62,7 @@ const _makeDefaultRetrySkipRule = err => !(err instanceof Error);
  */
 const _makeValidRetryOption = (options) => {
     const { rule, count, errorLogger, interval } = options;
+
     if (_isNotFunction(rule)) {
         throw new Error('rule is must be function');
     }
@@ -115,7 +115,7 @@ const _validFunctions = (functions) => {
     }
 
     const targetFunctions = Object.values(functions);
-    if (targetFunctions.every(_isNotAsyncFunction)) {
+    if (!targetFunctions.every(_isAsyncFunction)) {
         throw new Error('function is must be async');
     }
     if (targetFunctions.length === 0) {
@@ -129,7 +129,7 @@ const _validFunctions = (functions) => {
  * @param {Object} options
  */
 const _validOptions = (options) => {
-    if (options && _isNotObject(options)) {
+    if (!!options && _isNotObject(options)) {
         throw new Error('options is must be object');
     }
 };
