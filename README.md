@@ -31,7 +31,7 @@ const functions = {
     },
 };
 
-const wrappedFunctions = retryWrapper(someFunObject);
+const wrappedFunctions = retryWrapper(functions);
 ```
 
 ### option
