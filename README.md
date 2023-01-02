@@ -35,7 +35,7 @@ const wrappedFunctions = retryWrapper(functions);
 ```
 
 ### option
-You can also change the retry settings if you want.
+You can also change the retry settings if you want(If there is no parameter, it operates as Default).
 
 There are a total of three options.
 * options
