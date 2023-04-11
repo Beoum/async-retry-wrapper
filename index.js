@@ -1,6 +1,13 @@
 'use strict';
 
 /**
+ * @private check null
+ *
+ * @param {*} val
+ */
+const _isNull = val => typeof val === 'null';
+
+/**
  * @private check function type
  *
  * @param {Function} func function
@@ -12,14 +19,14 @@ const _isAsyncFunction = func => func.constructor.name === 'AsyncFunction';
  *
  * @param {Object} obj object
  */
-const _isObject = obj => typeof obj === 'object' && !Array.isArray(obj);
+const _isObject = obj => typeof obj === 'object' && !Array.isArray(obj) && !_isNull(obj);
 
 /**
- * @private check function
+ * @private check callable
  *
  * @param {Function} func function
  */
-const _isFunction = func => typeof func === 'function';
+const _isCallable = func => typeof func === 'function';
 
 /**
  * @private check boolean
@@ -79,7 +86,7 @@ const _makeValidOptions = (options) => {
     }
 
     const { count, rule, interval, logging } = setOptions;
-    if (!_isFunction(rule)) {
+    if (!_isCallable(rule)) {
         throw new Error('rule is must be function');
     }
     if (!Number.isInteger(count) || count < 1) {
