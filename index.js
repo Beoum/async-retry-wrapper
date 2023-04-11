@@ -13,7 +13,6 @@ const _isAsyncFunction = func => func.constructor.name === 'AsyncFunction';
  * @param {Object} obj object
  */
 const _isObject = obj => typeof obj === 'object' && !Array.isArray(obj);
-const _isNotObject = obj => !_isObject(obj);
 
 /**
  * @private check function
@@ -21,7 +20,13 @@ const _isNotObject = obj => !_isObject(obj);
  * @param {Function} func function
  */
 const _isFunction = func => typeof func === 'function';
-const _isNotFunction = func => !_isFunction(func);
+
+/**
+ * @private check boolean
+ *
+ * @param {Boolean} bool boolean
+ */
+const _isBoolean = bool => typeof bool === 'boolean';
 
 /**
  * @private make logger when error occur
@@ -52,57 +57,43 @@ const _delay = delay => new Promise(resolve => {
 const _makeDefaultRetrySkipRule = err => !(err instanceof Error);
 
 /**
- * @private make retry option with validation
  *
- * @param {Object} options
- * @param {Number} options.count retry count
- * @param {Number} options.interval retry interval
- * @param {Function} options.rule retry skip rule
- * @param {Function} options.errorLogger retry error logger
- */
-const _makeValidRetryOption = (options) => {
-    const { rule, count, errorLogger, interval } = options;
-
-    if (_isNotFunction(rule)) {
-        throw new Error('rule is must be function');
-    }
-    if (!Number.isInteger(count) || count < 1) {
-        throw new Error('count is must be greater 0');
-    }
-    if (_isNotFunction(errorLogger)) {
-        throw new Error('errorLogger is must be function');
-    }
-    if (!Number.isInteger(interval)) {
-        throw new Error('interval is must be integer');
-    }
-
-    return {
-        rule,
-        count,
-        interval,
-        errorLogger,
-    };
-};
-
-/**
- * set default option
+ * @private make valid option
  *
  * @param {Object} [options]
  * @param {Number} [options.count] retry count
  * @param {Number} [options.interval] retry interval
  * @param {Function} [options.rule] retry skip rule
  * @param {Function} [options.errorLogger] retry logger
- * @param {String} name function name
+ * @param {Boolean} [options.logging] retry logging option, default: false
  */
-const _makeDefaultOptions = (options, name) => {
-    const count = options?.count ?? 1;
-    return {
-        count,
+const _makeValidOptions = (options) => {
+    if (!!options && !_isObject(options)) {
+        throw new Error('options is must be object');
+    }
+    const setOptions = {
+        count: options?.count ?? 1,
         interval: options?.interval ?? 0,
         rule: options?.rule ?? _makeDefaultRetrySkipRule,
-        errorLogger: _makeRetryLogger(name, count),
-    };
-};
+        logging: options?.logging ?? false,
+    }
+
+    const { count, rule, interval, logging } = setOptions;
+    if (!_isFunction(rule)) {
+        throw new Error('rule is must be function');
+    }
+    if (!Number.isInteger(count) || count < 1) {
+        throw new Error('count is must be greater 0');
+    }
+    if (!Number.isInteger(interval)) {
+        throw new Error('interval is must be integer');
+    }
+    if (!_isBoolean(logging)) {
+        throw new Error('logging is must be boolean');
+    }
+
+    return setOptions;
+}
 
 /**
  * @private functions validator
@@ -110,7 +101,7 @@ const _makeDefaultOptions = (options, name) => {
  * @param {Object} functions
  */
 const _validFunctions = (functions) => {
-    if (_isNotObject(functions)) {
+    if (!_isObject(functions)) {
         throw new Error('functions is must be object');
     }
 
@@ -120,17 +111,6 @@ const _validFunctions = (functions) => {
     }
     if (targetFunctions.length === 0) {
         throw new Error('functions is not must be empty');
-    }
-};
-
-/**
- * @private functions validator
- *
- * @param {Object} options
- */
-const _validOptions = (options) => {
-    if (!!options && _isNotObject(options)) {
-        throw new Error('options is must be object');
     }
 };
 
@@ -148,9 +128,10 @@ const _call = async (func, currentCount, option) => {
 
             if (option.rule(err) || currentCount > option.count) {
                 throw err;
-            }
-
-            option.errorLogger(currentCount, err);
+            };
+            if (option.logging) {
+                option.errorLogger(currentCount, err);
+            };
 
             return _delay(option.interval)
                 .then(() => _call(func, currentCount, option));
@@ -165,16 +146,18 @@ const _call = async (func, currentCount, option) => {
  * @param {Number} [options.count] additional retry count, default: 1
  * @param {Number} [options.interval] retry interval, default: 0 ms
  * @param {Function} [options.rule] retry skip rule, default: occur error
+ * @param {Boolean} [options.logging] retry logging option, default: false
  */
 const retryWrapper = (functions, options) => {
     _validFunctions(functions);
-    _validOptions(options);
 
     return Object.keys(functions)
         .reduce((result, name) => {
             const func = functions[name];
-            const setOptions = _makeDefaultOptions(options, name);
-            const option = _makeValidRetryOption(setOptions);
+            const option = _makeValidOptions(options);
+            if (option.logging) {
+                option.errorLogger = _makeRetryLogger(name, option.count);
+            }
 
             result[name] = async (...args) => {
                 return _call(func.bind(null, ...args), 0, option);

@@ -44,13 +44,13 @@ describe('Parameter', () => {
     });
 
     describe('options', () => {
-       it('If the option exists and is not an object, it fails', () => {
-           const options = [];
+        it('If the option exists and is not an object, it fails', () => {
+            const options = [];
 
-           expect(() => {
-               retryWrapper(DEFAULT_FUNCTIONS, options);
-           }).toThrowError();
-       });
+            expect(() => {
+                retryWrapper(DEFAULT_FUNCTIONS, options);
+            }).toThrowError();
+        });
 
        it('If count is not a number, it fails', () => {
             const options = {
@@ -91,6 +91,15 @@ describe('Parameter', () => {
                retryWrapper(DEFAULT_FUNCTIONS, options);
            }).toThrowError();
        });
+
+        it('if logging is not a boolean, it fails', () => {
+            const options = {
+                logging: 'test',
+            }
+            expect(() => {
+                retryWrapper(DEFAULT_FUNCTIONS, options);
+            }).toThrowError();
+        });
     });
 });
 
