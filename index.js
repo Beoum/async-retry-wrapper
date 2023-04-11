@@ -128,10 +128,10 @@ const _call = async (func, currentCount, option) => {
 
             if (option.rule(err) || currentCount > option.count) {
                 throw err;
-            };
+            }
             if (option.logging) {
                 option.errorLogger(currentCount, err);
-            };
+            }
 
             return _delay(option.interval)
                 .then(() => _call(func, currentCount, option));
