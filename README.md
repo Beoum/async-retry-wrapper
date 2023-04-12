@@ -45,7 +45,7 @@ There are a total of three options.
     * default: 0 (milliseconds)
   * rule: When are you gonna stop trying again?, Only one parameter is error.
     * default: Retry if an error occurs
-  * logging: Do I need a log for retries?
+  * logging: Do you need a log for retries?
     * default: false
 
 The example is an option to retry twice more at 100 ms intervals when the response status is not 500.
